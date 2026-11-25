@@ -1,0 +1,10 @@
+# Amazon review files (downloaded separately, see README)
+data/
+# Generated outputs
+similitudes.csv
+export_*.csv
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
