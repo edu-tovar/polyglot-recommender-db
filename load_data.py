@@ -140,16 +140,18 @@ def cargar_fichero(filepath, categoria, cursor, mongo_col):
             """, (reviewer_id, asin, overall, unix_time,
                   fecha, helpful_votes, total_votes))
 
-            # Texto (MongoDB)
-            mongo_col.insert_one({
-                "reviewerID":  reviewer_id,
-                "asin":        asin,
-                "reviewText":  review_text,
-                "summary":     summary,
-            })
+            # Texto (MongoDB), solo si la review se ha insertado en MySQL
+            if cursor.rowcount > 0:
+                mongo_col.insert_one({
+                    "reviewerID":  reviewer_id,
+                    "asin":        asin,
+                    "reviewText":  review_text,
+                    "summary":     summary,
+                })
 
 def limpiar_mysql(cursor):
     """Elimina y recrea las tablas para evitar duplicados."""
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {MYSQL_DB}")
     cursor.execute(f"USE {MYSQL_DB}")
     cursor.execute("DROP TABLE IF EXISTS Review")
     cursor.execute("DROP TABLE IF EXISTS Producto")
